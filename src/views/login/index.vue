@@ -7,7 +7,7 @@
       </div>
       <!-- 表单=>elform包裹 -->
       <!-- 数据检验=>el-form绑定model 绑定rules规则-->
-      <el-form :model="loginForm" :rules="loginRules" style="margin-top:20px">
+      <el-form ref="myForm" :model="loginForm" :rules="loginRules" style="margin-top:20px">
           <!-- form-item  prop属性  绑定下面表单组件的字段名 -->
         <el-form-item prop="mobile">
           <!-- 手机号 -->
@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item>
             <!-- 登录按钮 -->
-            <el-button type="primary"  style="width:100%">登录</el-button>
+            <el-button @click="login" type="primary"  style="width:100%">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -41,7 +41,36 @@ export default {
         code: '', // 验证码
         agree: false // 是否同意协议
       },
-      loginRules: {} // 登陆规则集合对象
+      loginRules: {
+        //   决定着校验规则  key(字段名):value(对象数组) => 一个对象就是一个校验规则
+        // required 为true 就表示该字段必填 如果不填 就会提示消息
+        mobile: [{ required: true, message: '请输入您的手机号' },
+          { pattern: /^1[3456789]\d{9}$/, message: '请输入合法的手机号' }],
+        code: [{ required: true, message: '请输入您的验证码' },
+          { pattern: /^\d{6}$/, message: '验证码为6位数字' }],
+        agree: [{ validator: function (rule, value, callBack) {
+          // if (value) {
+          //   // 正确,勾选了协议
+          //   callBack()
+          // } else {
+          //   // 不对,没勾选协议
+          //   callBack(new Error('您必须同意无条件被我们蒙骗'))
+          // }
+          value ? callBack() : callBack(new Error('您必须无条件被我们蒙骗'))
+        } } ]
+      } // 登录规则集合对象
+      // 自定义形式去校验
+    }
+  }, // 登陆会的
+  methods: {
+    login () {
+      // 校验整个表单的规则
+      // validate是一个方法,=>方法中传入的一个函数
+      this.$refs.myForm.validate(function (isOK) {
+        if (isOK) {
+          console.log('校验成功')
+        }
+      })
     }
   }
 }
