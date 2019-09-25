@@ -1,14 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue' // 路由级组件
+import Home from './views/home' // 路由级组件
 import Login from './views/login'
+import Main from './views/home/main'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      component: Home
+      redirect: '/home'
+    },
+    {
+      path: '/home',
+      component: Home,
+      children: [
+        {
+          path: '',
+          component: Main
+        }
+      ]
     },
     {
       path: '/login',

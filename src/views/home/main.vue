@@ -12,5 +12,4 @@ export default {
   components: {
   }
 }
-
 </script>
